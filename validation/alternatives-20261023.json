@@ -1,0 +1,30 @@
+{
+  "scope": "Two independent configuration and operation-guide candidates; no live deployment",
+  "copied_files": 38,
+  "folders": [
+    "lmcache-ascend-mp-cpu",
+    "mooncake-ascend-direct-buffer-pool"
+  ],
+  "private_address_findings": 0,
+  "excluded": [
+    "LMCache validation stub-case and stub-failure.txt",
+    "__pycache__",
+    "runtime configs",
+    "raw host logs",
+    "archives",
+    "private env"
+  ],
+  "validation": {
+    "python_ast_and_compile": "PASS",
+    "shell_syntax": "PASS",
+    "json_parse": "PASS",
+    "lmcache_offline_checks": 10,
+    "mooncake_dp_renders": 6,
+    "mooncake_source_capacity_parser": "20GB = 21474836480 bytes",
+    "independent_source_review": "PASS; inherited capacity override and P/D flag differences corrected"
+  },
+  "server_connected": false,
+  "npu_runtime_tested": false,
+  "performance_5_percent_verified": false,
+  "public_history_note": "Current files are sanitized; older Git history is not certified by this report"
+}

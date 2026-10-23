@@ -1,0 +1,6 @@
+{
+  "kv_connector": "MooncakeConnectorV2",
+  "kv_role": "kv_consumer",
+  "engine_id": "1",
+  "kv_port": "36580"
+}

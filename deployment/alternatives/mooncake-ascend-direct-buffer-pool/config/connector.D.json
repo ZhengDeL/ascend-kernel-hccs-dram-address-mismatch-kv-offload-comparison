@@ -1,0 +1,21 @@
+{
+  "kv_connector": "MultiConnector",
+  "kv_role": "kv_consumer",
+  "engine_id": "glm53flash-buffer-decode-dp0",
+  "kv_connector_extra_config": {
+    "connectors": [
+      {"kv_connector": "MooncakeConnectorV2", "kv_role": "kv_consumer", "kv_port": "38580"},
+      {
+        "kv_connector": "AscendStoreConnector",
+        "kv_role": "kv_consumer",
+        "kv_connector_extra_config": {
+          "backend": "mooncake",
+          "use_layerwise": false,
+          "consumer_is_to_load": false,
+          "consumer_is_to_put": false,
+          "lookup_rpc_port": 39100
+        }
+      }
+    ]
+  }
+}

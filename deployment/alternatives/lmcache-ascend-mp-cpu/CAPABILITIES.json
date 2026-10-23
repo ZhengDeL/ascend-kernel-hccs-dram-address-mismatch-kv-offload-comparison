@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "prepared_date": "2026-10-23",
+  "status": "candidate_blocked_pending_actual_glm_hybrid_geometry_and_runtime_validation",
+  "server_deployed": false,
+  "npu_tested": false,
+  "glm53flash_int8_kv_mtp3_validated": false,
+  "multi_connector_mooncake_glm_validated": false,
+  "performance_regression_limit_percent": 5,
+  "performance_limit_tested": false,
+  "image": "quay.io/ascend/vllm-ascend:v0.30.0rc2-a3",
+  "model": "/var/ai-model/GLM-5.3-Flash-w8a8",
+  "lmcache_commit": "ff9185d419e1ce55c9f4f1ad84a4f4f1f06af7be",
+  "lmcache_ascend_commit": "73f32354ea21d9ec5de15f1f909d609aaa54ae6a",
+  "address_policy": "RFC5737 examples only; configure real addresses in private local copies",
+  "example_topology": {"P": "192.0.2.21", "D": "192.0.2.22", "P_DP_TP": [2, 8], "D_DP_TP": [4, 4]},
+  "cache_scope": "P local CPU DRAM only; two independent per-DP MP servers; D uses Mooncake delivery",
+  "cache_server_ports": [5555, 5556],
+  "cache_http_ports": [8150, 8151],
+  "l1_capacity_gib_per_server": 160,
+  "l1_capacity_total_gib_candidate": 320,
+  "attention_block_size": null,
+  "mamba_block_size": null,
+  "chunk_size": null,
+  "blockers": [
+    "Actual rc2 image packages and matching hcomm native build are unverified",
+    "Resolve GLM main MLA/compressed-indexer/KDA/Mamba geometry with INT8 KV and MTP3; do not copy Qwen or dense MLA chunks",
+    "Verify resolved Mamba block size does not exceed fixed P max_num_batched_tokens=4096",
+    "Verify every cacheable group layout and chunk alignment, scratch exclusion, native NPU IPC and local host-memory transfer",
+    "Complete standalone P CPU store/retrieve and correctness checks before enabling MultiConnector P-D candidate",
+    "No demonstrated <=5 percent performance result"
+  ],
+  "unsupported_or_excluded": [
+    "engine_driven for Mamba/GDN hybrid family",
+    "multiple server_urls in one connector when data_parallel_size > 1",
+    "fallback to vLLM rc2 builtin non-HMA LMCacheMPConnector",
+    "direct D reads of the P local DRAM pool",
+    "shared or remote MemCache-style HCCS host-memory pool",
+    "automatic package installation or OS changes"
+  ]
+}

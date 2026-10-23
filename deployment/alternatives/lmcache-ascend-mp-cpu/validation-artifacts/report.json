@@ -1,0 +1,17 @@
+{
+  "offline_only": true,
+  "checks": [
+    "JSON d-mooncake.json",
+    "JSON p-dp0-lmcache-only.json",
+    "JSON p-dp0-multi-candidate.json",
+    "JSON p-dp1-lmcache-only.json",
+    "JSON p-dp1-multi-candidate.json",
+    "Unresolved real geometry remains blank; capabilities are untested",
+    "Addresses restricted to RFC5737 / loopback / wildcard bind",
+    "Shell scripts LF and Bash syntax, including documentation examples",
+    "Real blank geometry fails before any lmcache invocation",
+    "Synthetic geometry/L1=1GiB stub forwards exact CLI; pipefail preserves exit 7"
+  ],
+  "npu_or_server_tested": false,
+  "stub_geometry_note": "8/8/16, L1=1 and synthetic 2GiB MemAvailable exist ONLY in copied validation stub, not deployment defaults"
+}

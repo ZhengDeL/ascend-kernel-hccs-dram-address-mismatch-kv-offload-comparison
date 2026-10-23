@@ -1,0 +1,13 @@
+{
+  "metadata_server": "P2PHANDSHAKE",
+  "protocol": "ascend",
+  "device_name": "",
+  "master_server_address": "192.0.2.21:50088",
+  "global_segment_size": "20GB",
+  "local_buffer_size": 0,
+  "preferred_segment": true,
+  "prefer_alloc_in_same_node": true,
+  "enable_ssd_offload": false,
+  "ssd_offload_path": "",
+  "tenant_id": "glm53flash-buffer-pool-candidate"
+}

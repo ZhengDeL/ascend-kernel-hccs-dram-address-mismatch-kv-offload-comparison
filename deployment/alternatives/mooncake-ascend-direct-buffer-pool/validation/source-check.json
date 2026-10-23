@@ -1,0 +1,16 @@
+{
+  "scope": "Offline source/API/config checks only; no container/NPU/server execution",
+  "rendered_dp_configs": 6,
+  "document_master_rejected": true,
+  "source_master_cli_flags": [
+    "rpc_port",
+    "metrics_port",
+    "enable_metric_reporting",
+    "eviction_high_watermark_ratio",
+    "eviction_ratio"
+  ],
+  "source_capacity_parser_20GB_bytes": 21474836480,
+  "prefill_16_workers_bytes": 343597383680,
+  "decode_pool_bytes": 0,
+  "linux_runtime_acceptance": "not-run"
+}

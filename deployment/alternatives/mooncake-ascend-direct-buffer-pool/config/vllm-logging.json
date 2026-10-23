@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {"diagnostic": {"format": "%(asctime)s %(levelname)s [%(process)d] %(name)s %(filename)s:%(lineno)d %(message)s"}},
+  "handlers": {"console": {"class": "logging.StreamHandler", "level": "DEBUG", "formatter": "diagnostic", "stream": "ext://sys.stdout"}},
+  "loggers": {"vllm": {"level": "DEBUG", "handlers": ["console"], "propagate": false}, "vllm_ascend": {"level": "DEBUG", "handlers": ["console"], "propagate": false}}
+}

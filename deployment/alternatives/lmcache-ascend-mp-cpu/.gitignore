@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+validation-artifacts/*
+!validation-artifacts/report.json
+!validation-artifacts/unresolved-gate.txt
+model-logs/
+runs/

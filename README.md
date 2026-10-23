@@ -23,6 +23,11 @@
 
 ## 阅读顺序
 
+用户指定的两套新增候选已分别整理到[独立卸载配置目录](deployment/alternatives/README.md)，每套都有配置与操作指导：
+
+- [LMCache-Ascend MP + 本地CPU DRAM](deployment/alternatives/lmcache-ascend-mp-cpu/README.md)
+- [Mooncake Ascend Direct + ASCEND_BUFFER_POOL](deployment/alternatives/mooncake-ascend-direct-buffer-pool/README.md)
+
 1. [两机本地脚本](deployment/glm53flash-1p1d-21-22/README.md)：官方配置、固定地址/镜像/权重、日志与启动顺序。
 2. [服务器第一轮采集清单](docs/01-server-evidence.md)：先提交哪些内容、每项解决什么判断。
 3. [OS / 驱动研究](docs/02-os-software.md)：具体内核兼容问题与地址转换边界。
