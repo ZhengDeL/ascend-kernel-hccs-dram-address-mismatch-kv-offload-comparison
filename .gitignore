@@ -1,0 +1,15 @@
+# Private server evidence stays local until explicitly sanitized.
+captures/
+logs/
+raw-evidence/
+private/
+*.tar.gz
+*.tgz
+*.zip
+__pycache__/
+*.pyc
+*.part
+.env
+*.pem
+id_rsa*
+id_ed25519*

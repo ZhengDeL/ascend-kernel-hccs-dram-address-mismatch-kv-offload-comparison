@@ -1,0 +1,21 @@
+test_container_metadata_does_not_import_runtime_or_collect_arbitrary_env (test_collector.CommandTests.test_container_metadata_does_not_import_runtime_or_collect_arbitrary_env) ... ok
+test_container_self_deadline_terminates_its_own_process (test_collector.CommandTests.test_container_self_deadline_terminates_its_own_process) ... skipped 'Linux SIGALRM is verified on Linux only'
+test_failed_command_preserves_stderr_and_code (test_collector.CommandTests.test_failed_command_preserves_stderr_and_code) ... ok
+test_large_both_streams_bounded_without_deadlock (test_collector.CommandTests.test_large_both_streams_bounded_without_deadlock) ... ok
+test_missing_command_has_explicit_stderr_and_status (test_collector.CommandTests.test_missing_command_has_explicit_stderr_and_status) ... ok
+test_timeout_is_bounded_and_explained (test_collector.CommandTests.test_timeout_is_bounded_and_explained) ... ok
+test_linux_file_fixture_manifest_and_sensitive_boot_filter (test_collector.FixtureCollectionTests.test_linux_file_fixture_manifest_and_sensitive_boot_filter) ... ok
+test_truncated_iomem_cannot_leave_numeric_capacity (test_collector.FixtureCollectionTests.test_truncated_iomem_cannot_leave_numeric_capacity) ... ok
+test_invalid_window_rejected (test_collector.IomemTests.test_invalid_window_rejected) ... ok
+test_malformed_input_never_reports_confident_capacity (test_collector.IomemTests.test_malformed_input_never_reports_confident_capacity) ... ok
+test_masked_addresses_are_unknown_not_zero_capacity (test_collector.IomemTests.test_masked_addresses_are_unknown_not_zero_capacity) ... ok
+test_masked_ram_even_with_visible_pci_resource (test_collector.IomemTests.test_masked_ram_even_with_visible_pci_resource) ... ok
+test_no_windows_has_no_implicit_contract (test_collector.IomemTests.test_no_windows_has_no_implicit_contract) ... ok
+test_overlaps_and_nested_ram_count_once (test_collector.IomemTests.test_overlaps_and_nested_ram_count_once) ... ok
+test_uncovered_window_is_known_zero_only_for_visible_ram (test_collector.IomemTests.test_uncovered_window_is_known_zero_only_for_visible_ram) ... ok
+test_windows_cross_nodes_do_not_guess_node_and_union_deduplicates (test_collector.IomemTests.test_windows_cross_nodes_do_not_guess_node_and_union_deduplicates) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 1.823s
+
+OK (skipped=1)

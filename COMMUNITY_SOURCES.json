@@ -1,0 +1,462 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-10-23T13:22:37Z",
+  "requested_sources": 13,
+  "finished_sources": 13,
+  "success_count": 13,
+  "failure_count": 0,
+  "total_source_bytes": 605092097,
+  "total_source_files": 38596,
+  "submodule_policy": "No recursive submodule download. Link entries recorded, not materialized.",
+  "resolved_attempts": [
+    {
+      "name": "lmcache",
+      "ref": "main",
+      "status": "failed",
+      "error": "Download failed after 2 attempts: https://api.github.com/repos/LMCache/LMCache/commits/main: HTTP Error 422: Unprocessable Entity",
+      "resolution": "GitHub repository default branch verified as dev; downloaded and verified dev commit ff9185d419e1ce55c9f4f1ad84a4f4f1f06af7be"
+    }
+  ],
+  "local_snapshot_root": "community-sources/",
+  "sources": [
+    {
+      "name": "ai-infra-summary",
+      "repo": "MarsChan8293/ai_infra_summary",
+      "kind": "github",
+      "ref": "main",
+      "commit": "5a1263fb5bfcc65e1504fa545486e7b76e1bcf52",
+      "source_url": "https://github.com/MarsChan8293/ai_infra_summary",
+      "download_url": "https://codeload.github.com/MarsChan8293/ai_infra_summary/tar.gz/5a1263fb5bfcc65e1504fa545486e7b76e1bcf52",
+      "archive_bytes": 39295,
+      "archive_sha256": "c22045c11a8ec7f262c8090cdf01f88ceb9406197cd8248c2bd02334c8320f9a",
+      "snapshot_type": "github-commit-archive",
+      "links_not_materialized": [],
+      "source_file_count": 4,
+      "source_bytes": 91872,
+      "file_manifest_sha256": "2085b8f99e953c792ce04a39a5581dd7b63c94dee55eec38b40f84743588fe5f",
+      "submodules": [],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 0.86,
+      "source_path": "ai-infra-summary-5a1263fb5bfc",
+      "file_manifest": "manifests/ai-infra-summary-5a1263fb5bfc.sha256",
+      "archive_path": "archives/ai-infra-summary-5a1263fb5bfc.tar.gz"
+    },
+    {
+      "name": "hcomm",
+      "url": "https://gitcode.com/cann/hcomm.git",
+      "kind": "gitcode",
+      "source_url": "https://gitcode.com/cann/hcomm.git",
+      "snapshot_type": "shallow-git-checkout",
+      "commit": "fa196b81173891dd03c2984f828e78a5f2cc527d",
+      "git_worktree_status": "",
+      "links_not_materialized": [],
+      "source_file_count": 9118,
+      "source_bytes": 112898437,
+      "file_manifest_sha256": "d9ffd2c6fda8d3e459de882f5e7847c6f3345089b3183a726e43e81e1d862c5d",
+      "submodules": [],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 209.68,
+      "source_path": "hcomm-fa196b811738",
+      "file_manifest": "manifests/hcomm-fa196b811738.sha256"
+    },
+    {
+      "name": "hixl",
+      "url": "https://gitcode.com/cann/hixl.git",
+      "kind": "gitcode",
+      "source_url": "https://gitcode.com/cann/hixl.git",
+      "snapshot_type": "shallow-git-checkout",
+      "commit": "787542ebec2729668597b858e34711f56864067a",
+      "git_worktree_status": "",
+      "links_not_materialized": [],
+      "source_file_count": 859,
+      "source_bytes": 9672540,
+      "file_manifest_sha256": "88b50cd4c1a47061e673a5fc670dc8f984c44ab63aef23bae1527694fdf34668",
+      "submodules": [],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 27.66,
+      "source_path": "hixl-787542ebec27",
+      "file_manifest": "manifests/hixl-787542ebec27.sha256"
+    },
+    {
+      "name": "lmcache",
+      "repo": "LMCache/LMCache",
+      "kind": "github",
+      "ref": "dev",
+      "source_url": "https://github.com/LMCache/LMCache",
+      "commit": "ff9185d419e1ce55c9f4f1ad84a4f4f1f06af7be",
+      "download_url": "https://codeload.github.com/LMCache/LMCache/tar.gz/ff9185d419e1ce55c9f4f1ad84a4f4f1f06af7be",
+      "archive_bytes": 9598217,
+      "archive_sha256": "2a910f331e9e0d416a0d1b1e19de5dc6f1c2a334661fe96f694bfad267651c33",
+      "snapshot_type": "github-commit-archive",
+      "links_not_materialized": [
+        {
+          "path": "CLAUDE.md",
+          "target": "AGENTS.md",
+          "kind": "symlink"
+        },
+        {
+          "path": "docs/design/tools/controller_benchmark/README.md",
+          "target": "../../../../lmcache/tools/controller_benchmark/README.md",
+          "kind": "symlink"
+        },
+        {
+          "path": "docs/design/tools/transfer_channel_benchmark/README.md",
+          "target": "../../../../lmcache/tools/transfer_channel_benchmark/README.md",
+          "kind": "symlink"
+        },
+        {
+          "path": "docs/design/usage_telemetry/README.md",
+          "target": "../../../lmcache/usage_telemetry/README.md",
+          "kind": "symlink"
+        },
+        {
+          "path": "docs/design/v1/mp_observability/README.md",
+          "target": "../../../../lmcache/v1/mp_observability/README.md",
+          "kind": "symlink"
+        },
+        {
+          "path": "lmcache/integration/vllm/lmcache_connector_v1.py",
+          "target": "../../inprocess/integration/vllm/lmcache_connector_v1.py",
+          "kind": "symlink"
+        },
+        {
+          "path": "lmcache/v1/distributed/bitmap_ops/README.md",
+          "target": "../../../../docs/design/v1/distributed/bitmap_ops/README.md",
+          "kind": "symlink"
+        }
+      ],
+      "source_file_count": 2803,
+      "source_bytes": 30280520,
+      "file_manifest_sha256": "4afb02da6796dbef6797a61d073aab83df911310190d4d9d766f9208d0b759a5",
+      "submodules": [],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 79.97,
+      "source_path": "lmcache-ff9185d419e1",
+      "file_manifest": "manifests/lmcache-ff9185d419e1.sha256",
+      "archive_path": "archives/lmcache-ff9185d419e1.tar.gz"
+    },
+    {
+      "name": "lmcache-ascend",
+      "repo": "LMCache/LMCache-Ascend",
+      "kind": "github",
+      "ref": "main",
+      "source_url": "https://github.com/LMCache/LMCache-Ascend",
+      "commit": "73f32354ea21d9ec5de15f1f909d609aaa54ae6a",
+      "download_url": "https://codeload.github.com/LMCache/LMCache-Ascend/tar.gz/73f32354ea21d9ec5de15f1f909d609aaa54ae6a",
+      "archive_bytes": 699531,
+      "archive_sha256": "3dedb9354c6ee4e10d3d41c53a5a3ca22c351dc1745df0edabe0404e4c52a1c7",
+      "snapshot_type": "github-commit-archive",
+      "links_not_materialized": [],
+      "source_file_count": 292,
+      "source_bytes": 3325419,
+      "file_manifest_sha256": "ea87b7c970b6d2e846a45c87ab3823c87e4d943d1f21e0ffc7667c2d4e6cf0b4",
+      "submodules": [
+        {
+          "section": "submodule \"third_party/hcomm\"",
+          "path": "third_party/hcomm",
+          "url": "https://gitcode.com/cann/hcomm.git",
+          "downloaded": false
+        }
+      ],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 10.44,
+      "source_path": "lmcache-ascend-73f32354ea21",
+      "file_manifest": "manifests/lmcache-ascend-73f32354ea21.sha256",
+      "archive_path": "archives/lmcache-ascend-73f32354ea21.tar.gz"
+    },
+    {
+      "name": "memcache",
+      "url": "https://gitcode.com/Ascend/memcache.git",
+      "kind": "gitcode",
+      "commit": "98fb4c303caeeb294bdc2db84667a87e54833acf",
+      "source_url": "https://gitcode.com/Ascend/memcache.git",
+      "snapshot_type": "verified-local-git-checkout-copy",
+      "git_worktree_status": "",
+      "links_not_materialized": [],
+      "source_file_count": 470,
+      "source_bytes": 5460095,
+      "file_manifest_sha256": "647831be6b5a54c9744d015751bf936c852d8c9fcc63a9e93619a38f6ffb180d",
+      "submodules": [
+        {
+          "section": "submodule \"test/3rdparty/googletest\"",
+          "path": "test/3rdparty/googletest",
+          "url": "https://gitcode.com/GitHub_Trending/go/googletest.git",
+          "downloaded": false
+        },
+        {
+          "section": "submodule \"test/3rdparty/mockcpp\"",
+          "path": "test/3rdparty/mockcpp",
+          "url": "https://github.com/sinojelly/mockcpp.git",
+          "downloaded": false
+        },
+        {
+          "section": "submodule \"3rdparty/log/spdlog\"",
+          "path": "3rdparty/log/spdlog",
+          "url": "https://gitcode.com/GitHub_Trending/sp/spdlog.git",
+          "downloaded": false
+        },
+        {
+          "section": "submodule \"3rdparty/nlohmann/json\"",
+          "path": "3rdparty/nlohmann/json",
+          "url": "https://gitcode.com/GitHub_Trending/js/json.git\nbranch = tags/v3.12.0",
+          "downloaded": false
+        },
+        {
+          "section": "submodule \"3rdparty/prometheus-cpp-lite\"",
+          "path": "3rdparty/prometheus-cpp-lite",
+          "url": "https://github.com/biaks/prometheus-cpp-lite.git",
+          "downloaded": false
+        },
+        {
+          "section": "submodule \"3rdparty/msgpack-c\"",
+          "path": "3rdparty/msgpack-c",
+          "url": "https://gitcode.com/gh_mirrors/ms/msgpack-c.git",
+          "downloaded": false
+        },
+        {
+          "section": "submodule \"3rdparty/libzmq\"",
+          "path": "3rdparty/libzmq",
+          "url": "https://gitcode.com/gh_mirrors/li/libzmq.git",
+          "downloaded": false
+        },
+        {
+          "section": "submodule \"3rdparty/libsodium\"",
+          "path": "3rdparty/libsodium",
+          "url": "https://gitcode.com/gh_mirrors/li/libsodium.git",
+          "downloaded": false
+        }
+      ],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 13.81,
+      "source_path": "memcache-98fb4c303cae",
+      "file_manifest": "manifests/memcache-98fb4c303cae.sha256"
+    },
+    {
+      "name": "memfabric",
+      "url": "https://gitcode.com/Ascend/memfabric_hybrid.git",
+      "kind": "gitcode",
+      "commit": "8df6c8f3e1ca1ddfce2dc903d0780300278c1b84",
+      "source_url": "https://gitcode.com/Ascend/memfabric_hybrid.git",
+      "snapshot_type": "verified-local-git-checkout-copy",
+      "git_worktree_status": "",
+      "links_not_materialized": [],
+      "source_file_count": 1198,
+      "source_bytes": 13349627,
+      "file_manifest_sha256": "f1351d09ab813239d004b452884525462e1b832337639e00e7ef85c9482e1db7",
+      "submodules": [
+        {
+          "section": "submodule \"test/3rdparty/googletest\"",
+          "path": "test/3rdparty/googletest",
+          "url": "https://github.com/google/googletest.git",
+          "downloaded": false
+        },
+        {
+          "section": "submodule \"test/3rdparty/mockcpp\"",
+          "path": "test/3rdparty/mockcpp",
+          "url": "https://github.com/sinojelly/mockcpp.git",
+          "downloaded": false
+        }
+      ],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 36.47,
+      "source_path": "memfabric-8df6c8f3e1ca",
+      "file_manifest": "manifests/memfabric-8df6c8f3e1ca.sha256"
+    },
+    {
+      "name": "mooncake",
+      "repo": "kvcache-ai/Mooncake",
+      "kind": "github",
+      "ref": "main",
+      "commit": "dd1217b6c461491e7c73ff29b4ffad215e0a9ac0",
+      "source_url": "https://github.com/kvcache-ai/Mooncake",
+      "download_url": "https://codeload.github.com/kvcache-ai/Mooncake/tar.gz/dd1217b6c461491e7c73ff29b4ffad215e0a9ac0",
+      "archive_bytes": 52488835,
+      "archive_sha256": "cdf02cd1e4e9075775a69475722ae750b37ddab0791b3775d8aa82813e922560",
+      "snapshot_type": "github-commit-archive",
+      "links_not_materialized": [],
+      "source_file_count": 2818,
+      "source_bytes": 96235421,
+      "file_manifest_sha256": "239152e0a233d951138c55f802048c70220cb18fc1f0fc095d848f51f72c3dca",
+      "submodules": [
+        {
+          "section": "submodule \"extern/pybind11\"",
+          "path": "extern/pybind11",
+          "url": "https://github.com/pybind/pybind11.git",
+          "downloaded": false
+        }
+      ],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 114.26,
+      "source_path": "mooncake-dd1217b6c461",
+      "file_manifest": "manifests/mooncake-dd1217b6c461.sha256",
+      "archive_path": "archives/mooncake-dd1217b6c461.tar.gz"
+    },
+    {
+      "name": "umdk",
+      "url": "https://gitcode.com/openeuler/umdk.git",
+      "kind": "gitcode",
+      "source_url": "https://gitcode.com/openeuler/umdk.git",
+      "snapshot_type": "shallow-git-checkout",
+      "commit": "c1b643e26c9265b8e609f49603531a2131b76361",
+      "git_worktree_status": "",
+      "links_not_materialized": [],
+      "source_file_count": 1453,
+      "source_bytes": 36838557,
+      "file_manifest_sha256": "b7c251a369fadc21edc0ac42f5bd93e27c38e75f3902b18f9b382362ddc63a1e",
+      "submodules": [
+        {
+          "section": "submodule \"src/cam/third_party/catlass\"",
+          "path": "src/cam/third_party/catlass",
+          "url": "https://gitcode.com/cann/catlass.git",
+          "downloaded": false
+        }
+      ],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 41.46,
+      "source_path": "umdk-c1b643e26c92",
+      "file_manifest": "manifests/umdk-c1b643e26c92.sha256"
+    },
+    {
+      "name": "vllm-ascend-main",
+      "repo": "vllm-project/vllm-ascend",
+      "kind": "github",
+      "ref": "main",
+      "commit": "4e6eac4e476d9be3476e99440f4cabed67b253ea",
+      "source_url": "https://github.com/vllm-project/vllm-ascend",
+      "download_url": "https://codeload.github.com/vllm-project/vllm-ascend/tar.gz/4e6eac4e476d9be3476e99440f4cabed67b253ea",
+      "archive_bytes": 19086061,
+      "archive_sha256": "b83e4525b7f0fb2fd255a2fb0c2a4bbedf9f04135e0b6ec2382f3a1a74a0e575",
+      "snapshot_type": "github-commit-archive",
+      "links_not_materialized": [],
+      "source_file_count": 4554,
+      "source_bytes": 63047669,
+      "file_manifest_sha256": "bbd87ee727d3ea25691b484f8281a2c54dfe8cadb5dccc9e78513ffb079c8b84",
+      "submodules": [
+        {
+          "section": "submodule \"csrc/third_party/catlass\"",
+          "path": "csrc/third_party/catlass",
+          "url": "https://gitcode.com/cann/catlass.git",
+          "downloaded": false
+        }
+      ],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 121.9,
+      "source_path": "vllm-ascend-main-4e6eac4e476d",
+      "file_manifest": "manifests/vllm-ascend-main-4e6eac4e476d.sha256",
+      "archive_path": "archives/vllm-ascend-main-4e6eac4e476d.tar.gz"
+    },
+    {
+      "name": "vllm-ascend-rc2",
+      "repo": "vllm-project/vllm-ascend",
+      "kind": "github",
+      "ref": "v0.30.0rc2",
+      "commit": "8fde6d4e335fe300e2b949aab0e31659cce0811d",
+      "source_url": "https://github.com/vllm-project/vllm-ascend",
+      "download_url": "https://codeload.github.com/vllm-project/vllm-ascend/tar.gz/8fde6d4e335fe300e2b949aab0e31659cce0811d",
+      "archive_bytes": 17568828,
+      "archive_sha256": "48c797546805b04ffde118c506f8902e37e19bf2cb5d1713097056a4c93e998c",
+      "snapshot_type": "github-commit-archive",
+      "links_not_materialized": [],
+      "source_file_count": 4431,
+      "source_bytes": 59555271,
+      "file_manifest_sha256": "a7a9d00ebc3bda36a2711f07c1a07209a0f73e98775862c5f6f41eac803a2611",
+      "submodules": [
+        {
+          "section": "submodule \"csrc/third_party/catlass\"",
+          "path": "csrc/third_party/catlass",
+          "url": "https://gitcode.com/cann/catlass.git",
+          "downloaded": false
+        }
+      ],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 121.23,
+      "source_path": "vllm-ascend-rc2-8fde6d4e335f",
+      "file_manifest": "manifests/vllm-ascend-rc2-8fde6d4e335f.sha256",
+      "archive_path": "archives/vllm-ascend-rc2-8fde6d4e335f.tar.gz"
+    },
+    {
+      "name": "vllm-rc2",
+      "repo": "vllm-project/vllm",
+      "kind": "github",
+      "ref": "v0.30.0rc2",
+      "commit": "fa6ff060667f2cd96f142af021ba9e35165beb78",
+      "source_url": "https://github.com/vllm-project/vllm",
+      "download_url": "https://codeload.github.com/vllm-project/vllm/tar.gz/fa6ff060667f2cd96f142af021ba9e35165beb78",
+      "archive_bytes": 42278655,
+      "archive_sha256": "476c60332fc92569af70d8476a26e42ad3583cd1635aca67cd72a5afd886f604",
+      "snapshot_type": "github-commit-archive",
+      "links_not_materialized": [
+        {
+          "path": ".claude/skills/ci-fails-buildkite",
+          "target": "../../.agents/skills/ci-fails-buildkite",
+          "kind": "symlink"
+        },
+        {
+          "path": ".claude/skills/debug-ima",
+          "target": "../../.agents/skills/debug-ima",
+          "kind": "symlink"
+        },
+        {
+          "path": ".claude/skills/kernel-microbenchmark",
+          "target": "../../.agents/skills/kernel-microbenchmark",
+          "kind": "symlink"
+        },
+        {
+          "path": ".claude/skills/triton-kernel-writing",
+          "target": "../../.agents/skills/triton-kernel-writing",
+          "kind": "symlink"
+        }
+      ],
+      "source_file_count": 7155,
+      "source_bytes": 115936521,
+      "file_manifest_sha256": "7a44ce320b31bcf1b89e9ffe4b05c641c62bdba8b26ec7fa3efbb1fc0a733f6b",
+      "submodules": [],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 248.2,
+      "source_path": "vllm-rc2-fa6ff060667f",
+      "file_manifest": "manifests/vllm-rc2-fa6ff060667f.sha256",
+      "archive_path": "archives/vllm-rc2-fa6ff060667f.tar.gz"
+    },
+    {
+      "name": "yuanrong-datasystem",
+      "repo": "openyuanrong/datasystem",
+      "kind": "github",
+      "ref": "master",
+      "source_url": "https://github.com/openyuanrong/datasystem",
+      "commit": "85b27d03ecb21291618102e469916a2e58150e9f",
+      "download_url": "https://codeload.github.com/openyuanrong/datasystem/tar.gz/85b27d03ecb21291618102e469916a2e58150e9f",
+      "archive_bytes": 12737119,
+      "archive_sha256": "aa01b63beb5be0309b01ef26ea21847edd2530163c090844cb1fbf911b13f7fc",
+      "snapshot_type": "github-commit-archive",
+      "links_not_materialized": [
+        {
+          "path": "tests/kvtest/tests/cxx/stubs/nlohmann_json.hpp",
+          "target": "../../../../src/metrics/vendor/nlohmann_json.hpp",
+          "kind": "symlink"
+        }
+      ],
+      "source_file_count": 3441,
+      "source_bytes": 58400148,
+      "file_manifest_sha256": "b11641e6368fe92a1cd92257fad83b02ca4e39b1c37fc4100212f82056e2ce44",
+      "submodules": [],
+      "submodules_downloaded": false,
+      "status": "success",
+      "elapsed_seconds": 96.81,
+      "source_path": "yuanrong-datasystem-85b27d03ecb2",
+      "file_manifest": "manifests/yuanrong-datasystem-85b27d03ecb2.sha256",
+      "archive_path": "archives/yuanrong-datasystem-85b27d03ecb2.tar.gz"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "retrieved_date": "2026-10-23",
+  "source_repository": "https://github.com/MarsChan8293/ai_infra_summary",
+  "source_commit": "5a1263fb5bfcc65e1504fa545486e7b76e1bcf52",
+  "source_tree": "fcd4ddbb9fb8250f2954a578b8179be7f566cff0",
+  "source_license": "No LICENSE file present at pinned source commit; original rights retained. Root target LICENSE does not relicense this snapshot.",
+  "snapshot_path": "upstream/ai_infra_summary",
+  "files": [
+    {
+      "path": "README.md",
+      "git_blob_sha1": "c519ff79b8be97f263fa362b8f96236da787daef",
+      "bytes": 3313,
+      "sha256": "9389c6dfca20e7a4156cfb0d7c51da535088345874bfdab476bbad85adf18585"
+    },
+    {
+      "path": "docs/ascend-910c-kernel510-kv-cache-pool-feasibility.md",
+      "git_blob_sha1": "bca056e58cd12c74075be56bbfe8acb0a6fb1b17",
+      "bytes": 24350,
+      "sha256": "70b77ef8aa14465a8e90b8be25519485b224830e662c46025b120d583f52cad9"
+    },
+    {
+      "path": "docs/ascend-kernel510-hccs-dram-address-mismatch-kv-offload-comparison.md",
+      "git_blob_sha1": "283aba5103cb4e9634273e33fd3f85a5ea0566af",
+      "bytes": 20320,
+      "sha256": "cce515a6613d57c46d10ba8c7ba9dd98496a1a3cb679348dee3f4cc2d1d93811"
+    },
+    {
+      "path": "docs/client-owned-kv-cache-design.md",
+      "git_blob_sha1": "517a52c070820b7c22be637645f73cb75943642b",
+      "bytes": 43889,
+      "sha256": "c1b6ab964fd55b471806580d6a7e7a33d366b30228bf70b47570945b2d18f81e"
+    }
+  ],
+  "research_sources": [
+    {
+      "repository": "https://gitcode.com/Ascend/memcache",
+      "commit": "98fb4c303caeeb294bdc2db84667a87e54833acf"
+    },
+    {
+      "repository": "https://gitcode.com/Ascend/memfabric_hybrid",
+      "commit": "8df6c8f3e1ca1ddfce2dc903d0780300278c1b84"
+    },
+    {
+      "repository": "https://github.com/Ascend/memfabric_hybrid",
+      "commit": "004d9317289fe99bd6bf13def0500b3fa3795ccc",
+      "purpose": "Historical GitHub mirror only; differs from GitCode"
+    },
+    {
+      "repository": "https://github.com/vllm-project/vllm-ascend",
+      "commit": "8fde6d4e335fe300e2b949aab0e31659cce0811d",
+      "ref": "v0.30.0rc2"
+    },
+    {
+      "repository": "https://github.com/vllm-project/vllm",
+      "commit": "fa6ff060667f2cd96f142af021ba9e35165beb78",
+      "ref": "v0.30.0rc2"
+    },
+    {
+      "repository": "https://github.com/torvalds/linux",
+      "commit": "f6037a4a686523dee1967ef7620349822e019ff8",
+      "purpose": "alloc_contig_range GFP verifier; verify actual distro backport separately"
+    },
+    {
+      "repository": "https://github.com/vllm-project/vllm-ascend",
+      "ref": "main snapshot for user-selected latest URL",
+      "commit": "4e6eac4e476d9be3476e99440f4cabed67b253ea",
+      "model_document_blob_sha1": "ce25385c3bf4a29e96654546875e852d42fd310c"
+    }
+  ]
+}

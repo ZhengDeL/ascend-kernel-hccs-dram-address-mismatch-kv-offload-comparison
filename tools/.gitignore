@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+evidence*/
+raw/
+*.tar
+*.tar.gz
+*.tgz

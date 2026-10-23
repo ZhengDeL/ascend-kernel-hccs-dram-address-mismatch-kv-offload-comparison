@@ -1,0 +1,413 @@
+[
+  {
+    "node": 21,
+    "ip": "192.0.2.21",
+    "service": "model",
+    "role": "P",
+    "container": "glm53flash-21-22-model-21",
+    "image": "quay.io/ascend/vllm-ascend:v0.30.0rc2-a3",
+    "model": "/var/ai-model/GLM-5.3-Flash-w8a8",
+    "log_root": "/var/ai-model/lzd/glm53flash-1p1d-21-22",
+    "nic": "AUTO_BY_LOCAL_IP",
+    "command": [
+      "python3",
+      "/opt/glm53flash/launch_online_dp.py",
+      "--role",
+      "P",
+      "--template",
+      "/opt/glm53flash/run_p.sh",
+      "--dp-size",
+      "2",
+      "--tp-size",
+      "8",
+      "--dp-address",
+      "192.0.2.21",
+      "--dp-rpc-port",
+      "12325",
+      "--vllm-start-port",
+      "9081"
+    ],
+    "ports": [
+      12325,
+      9081,
+      9082,
+      36680,
+      36681,
+      36682,
+      36683,
+      36684,
+      36685,
+      36686,
+      36687,
+      36688,
+      36689,
+      36690,
+      36691,
+      36692,
+      36693,
+      36694,
+      36695,
+      36696,
+      36697
+    ],
+    "protocol": "device_sdma",
+    "worker_dram_gb": 20,
+    "node_pool_gb": 320,
+    "vllm_ascend_reference_commit": "4e6eac4e476d9be3476e99440f4cabed67b253ea",
+    "topology": {
+      "P": {
+        "nodes": [
+          21
+        ],
+        "dp": 2,
+        "tp": 8,
+        "pp": 1
+      },
+      "D": {
+        "nodes": [
+          22
+        ],
+        "dp": 4,
+        "tp": 4,
+        "pp": 1
+      }
+    },
+    "connectors": [
+      {
+        "kv_connector": "MultiConnector",
+        "kv_role": "kv_producer",
+        "engine_id": "0",
+        "kv_connector_extra_config": {
+          "connectors": [
+            {
+              "kv_connector": "MooncakeConnectorV2",
+              "kv_role": "kv_producer",
+              "kv_port": "36680"
+            },
+            {
+              "kv_connector": "AscendStoreConnector",
+              "kv_role": "kv_producer",
+              "kv_connector_extra_config": {
+                "backend": "memcache",
+                "memcache_dp_init_barrier": true,
+                "use_layerwise": false,
+                "lookup_rpc_port": 37000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kv_connector": "MultiConnector",
+        "kv_role": "kv_producer",
+        "engine_id": "0",
+        "kv_connector_extra_config": {
+          "connectors": [
+            {
+              "kv_connector": "MooncakeConnectorV2",
+              "kv_role": "kv_producer",
+              "kv_port": "36680"
+            },
+            {
+              "kv_connector": "AscendStoreConnector",
+              "kv_role": "kv_producer",
+              "kv_connector_extra_config": {
+                "backend": "memcache",
+                "memcache_dp_init_barrier": true,
+                "use_layerwise": false,
+                "lookup_rpc_port": 37001
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "node": 22,
+    "ip": "192.0.2.22",
+    "service": "model",
+    "role": "D",
+    "container": "glm53flash-21-22-model-22",
+    "image": "quay.io/ascend/vllm-ascend:v0.30.0rc2-a3",
+    "model": "/var/ai-model/GLM-5.3-Flash-w8a8",
+    "log_root": "/var/ai-model/lzd/glm53flash-1p1d-21-22",
+    "nic": "AUTO_BY_LOCAL_IP",
+    "command": [
+      "python3",
+      "/opt/glm53flash/launch_online_dp.py",
+      "--role",
+      "D",
+      "--template",
+      "/opt/glm53flash/run_d.sh",
+      "--dp-size",
+      "4",
+      "--tp-size",
+      "4",
+      "--dp-address",
+      "192.0.2.22",
+      "--dp-rpc-port",
+      "12325",
+      "--vllm-start-port",
+      "9900"
+    ],
+    "ports": [
+      12325,
+      9900,
+      9901,
+      9902,
+      9903,
+      36580,
+      36581,
+      36582,
+      36583,
+      36584,
+      36585,
+      36586,
+      36587,
+      36588,
+      36589,
+      36590,
+      36591,
+      36592,
+      36593,
+      36594,
+      36595,
+      36596,
+      36597,
+      36598,
+      36599
+    ],
+    "protocol": "device_sdma",
+    "worker_dram_gb": 20,
+    "node_pool_gb": 320,
+    "vllm_ascend_reference_commit": "4e6eac4e476d9be3476e99440f4cabed67b253ea",
+    "topology": {
+      "P": {
+        "nodes": [
+          21
+        ],
+        "dp": 2,
+        "tp": 8,
+        "pp": 1
+      },
+      "D": {
+        "nodes": [
+          22
+        ],
+        "dp": 4,
+        "tp": 4,
+        "pp": 1
+      }
+    },
+    "connectors": [
+      {
+        "kv_connector": "MultiConnector",
+        "kv_role": "kv_consumer",
+        "engine_id": "1",
+        "kv_connector_extra_config": {
+          "connectors": [
+            {
+              "kv_connector": "MooncakeConnectorV2",
+              "kv_role": "kv_consumer",
+              "kv_port": "36580"
+            },
+            {
+              "kv_connector": "AscendStoreConnector",
+              "kv_role": "kv_consumer",
+              "kv_connector_extra_config": {
+                "backend": "memcache",
+                "memcache_dp_init_barrier": true,
+                "use_layerwise": false,
+                "lookup_rpc_port": 37100,
+                "consumer_is_to_load": false,
+                "consumer_is_to_put": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kv_connector": "MultiConnector",
+        "kv_role": "kv_consumer",
+        "engine_id": "1",
+        "kv_connector_extra_config": {
+          "connectors": [
+            {
+              "kv_connector": "MooncakeConnectorV2",
+              "kv_role": "kv_consumer",
+              "kv_port": "36580"
+            },
+            {
+              "kv_connector": "AscendStoreConnector",
+              "kv_role": "kv_consumer",
+              "kv_connector_extra_config": {
+                "backend": "memcache",
+                "memcache_dp_init_barrier": true,
+                "use_layerwise": false,
+                "lookup_rpc_port": 37101,
+                "consumer_is_to_load": false,
+                "consumer_is_to_put": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kv_connector": "MultiConnector",
+        "kv_role": "kv_consumer",
+        "engine_id": "1",
+        "kv_connector_extra_config": {
+          "connectors": [
+            {
+              "kv_connector": "MooncakeConnectorV2",
+              "kv_role": "kv_consumer",
+              "kv_port": "36580"
+            },
+            {
+              "kv_connector": "AscendStoreConnector",
+              "kv_role": "kv_consumer",
+              "kv_connector_extra_config": {
+                "backend": "memcache",
+                "memcache_dp_init_barrier": true,
+                "use_layerwise": false,
+                "lookup_rpc_port": 37102,
+                "consumer_is_to_load": false,
+                "consumer_is_to_put": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kv_connector": "MultiConnector",
+        "kv_role": "kv_consumer",
+        "engine_id": "1",
+        "kv_connector_extra_config": {
+          "connectors": [
+            {
+              "kv_connector": "MooncakeConnectorV2",
+              "kv_role": "kv_consumer",
+              "kv_port": "36580"
+            },
+            {
+              "kv_connector": "AscendStoreConnector",
+              "kv_role": "kv_consumer",
+              "kv_connector_extra_config": {
+                "backend": "memcache",
+                "memcache_dp_init_barrier": true,
+                "use_layerwise": false,
+                "lookup_rpc_port": 37103,
+                "consumer_is_to_load": false,
+                "consumer_is_to_put": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "node": 21,
+    "ip": "192.0.2.21",
+    "service": "meta",
+    "role": "meta",
+    "container": "glm53flash-21-22-meta-21",
+    "image": "quay.io/ascend/vllm-ascend:v0.30.0rc2-a3",
+    "model": "/var/ai-model/GLM-5.3-Flash-w8a8",
+    "log_root": "/var/ai-model/lzd/glm53flash-1p1d-21-22",
+    "nic": "AUTO_BY_LOCAL_IP",
+    "command": [
+      "python3",
+      "-c",
+      "import sys; from memcache_hybrid import MetaService; sys.exit(MetaService.main())"
+    ],
+    "ports": [
+      5000,
+      6000,
+      8000
+    ],
+    "protocol": "device_sdma",
+    "worker_dram_gb": 0,
+    "node_pool_gb": 0,
+    "vllm_ascend_reference_commit": "4e6eac4e476d9be3476e99440f4cabed67b253ea",
+    "topology": {
+      "P": {
+        "nodes": [
+          21
+        ],
+        "dp": 2,
+        "tp": 8,
+        "pp": 1
+      },
+      "D": {
+        "nodes": [
+          22
+        ],
+        "dp": 4,
+        "tp": 4,
+        "pp": 1
+      }
+    }
+  },
+  {
+    "node": 21,
+    "ip": "192.0.2.21",
+    "service": "proxy",
+    "role": "proxy",
+    "container": "glm53flash-21-22-proxy-21",
+    "image": "quay.io/ascend/vllm-ascend:v0.30.0rc2-a3",
+    "model": "/var/ai-model/GLM-5.3-Flash-w8a8",
+    "log_root": "/var/ai-model/lzd/glm53flash-1p1d-21-22",
+    "nic": "AUTO_BY_LOCAL_IP",
+    "command": [
+      "python3",
+      "/vllm-workspace/vllm-ascend/examples/disaggregated_prefill_v1/load_balance_proxy_server_example.py",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8081",
+      "--prefiller-hosts",
+      "192.0.2.21",
+      "192.0.2.21",
+      "--prefiller-ports",
+      "9081",
+      "9082",
+      "--decoder-hosts",
+      "192.0.2.22",
+      "192.0.2.22",
+      "192.0.2.22",
+      "192.0.2.22",
+      "--decoder-ports",
+      "9900",
+      "9901",
+      "9902",
+      "9903"
+    ],
+    "ports": [
+      8081
+    ],
+    "protocol": "device_sdma",
+    "worker_dram_gb": 0,
+    "node_pool_gb": 0,
+    "vllm_ascend_reference_commit": "4e6eac4e476d9be3476e99440f4cabed67b253ea",
+    "topology": {
+      "P": {
+        "nodes": [
+          21
+        ],
+        "dp": 2,
+        "tp": 8,
+        "pp": 1
+      },
+      "D": {
+        "nodes": [
+          22
+        ],
+        "dp": 4,
+        "tp": 4,
+        "pp": 1
+      }
+    }
+  }
+]

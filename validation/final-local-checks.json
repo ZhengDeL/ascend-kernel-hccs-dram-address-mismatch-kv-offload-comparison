@@ -1,0 +1,20 @@
+{
+  "platform": "Windows x86_64 / Python 3.12 / Git Bash",
+  "remote_operations": false,
+  "npu_execution": false,
+  "checks": [
+    {
+      "check": "all deployment and bundled collector Python AST",
+      "status": "PASS"
+    },
+    {
+      "check": "Bash syntax",
+      "files": 8,
+      "status": "PASS"
+    },
+    {
+      "check": "4 offline plans parsed with exact user image and final official topology",
+      "status": "PASS"
+    }
+  ]
+}
