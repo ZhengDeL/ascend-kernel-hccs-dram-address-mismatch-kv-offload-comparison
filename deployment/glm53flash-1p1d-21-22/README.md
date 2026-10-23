@@ -1,5 +1,7 @@
 # GLM-5.3-Flash：两台 A3 的官方 1P1D + MemCache
 
+**公开脚本使用示例地址。** `192.0.2.21`–`192.0.2.24` 是 RFC 5737 文档地址，不能原样用于现场部署。上机前只在私有副本中修改 `deploy.py`、`launch_online_dp.py`、`diagnostics.py`、`config/mmc-meta.conf`、`config/mmc-local.conf` 等对应地址，并保持一致；真实地址、凭据及原始采集包不得提交或回传 GitHub。
+
 本目录按用户最后指定的 [latest 中文文档第5.3/5.4节](https://docs.vllm.ai/projects/ascend/zh-cn/latest/tutorials/models/GLM5.3-Flash.html#54-prefill-decode-disaggregation-with-kv-cache-pool) 准备，网页对应源码冻结于 `4e6eac4e476d9be3476e99440f4cabed67b253ea`，核查日期2026-10-23。仅完成本地准备，未登录服务器或启动服务。
 
 | 服务器 | 模型并行 | API | DDR池与其他服务 |

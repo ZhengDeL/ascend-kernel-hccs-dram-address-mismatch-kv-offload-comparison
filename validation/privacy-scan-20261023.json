@@ -1,0 +1,18 @@
+{
+  "completed_utc": "2026-10-23T14:39:29.211391+00:00",
+  "scope": "64 pre-existing tracked public files; upstream originals retained unchanged",
+  "site_address_matches": 0,
+  "other_nonexample_ipv4_matches": 0,
+  "credential_pattern_matches": 0,
+  "example_addresses": "RFC 5737 TEST-NET-1; change private on-site copies before deployment",
+  "source_manifest_and_upstream_originals_modified": false,
+  "local_site_configuration_modified": false,
+  "validation": {
+    "deployment_tests_run": 59,
+    "passed": 54,
+    "skipped_linux_specific": 5,
+    "failures": 0,
+    "linux_npu_runtime_acceptance": "not performed"
+  },
+  "history_scope": "Current working tree only; this report does not certify older Git history."
+}
