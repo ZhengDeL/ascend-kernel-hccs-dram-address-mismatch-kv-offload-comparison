@@ -11,6 +11,58 @@
 
 权重固定 `/var/ai-model/GLM-5.3-Flash-w8a8`；镜像保留用户要求的 `quay.io/ascend/vllm-ascend:v0.30.0rc2-a3`。部署目录建议 `/var/ai-model/lzd/glm53flash-1p1d-21-22`；日志始终在其 `runs/<时间>-<服务>-<节点>/` 下，不写旧 `/mnt/models`。
 
+## MemCache 在哪里、怎么启动
+
+**本包已配置 MemCache。** MetaService在21单独启动；LocalService随21/22的每个vLLM worker初始化，当前官方方案不另起独立LocalService容器。因此没有单独的`start_memcache.sh`，启动Meta后再启动D、P即会初始化各worker的MemCache。
+
+| MemCache内容 | 本地文件 | 实际作用 |
+| --- | --- | --- |
+| Meta启动入口 | [start_meta.sh](start_meta.sh) | 在21创建并启动`glm53flash-21-22-meta-21`容器 |
+| Meta服务配置 | [config/mmc-meta.conf](config/mmc-meta.conf) | Meta `192.0.2.21:5000`、ConfigStore `:6000`、metrics `:8000` |
+| worker内的LocalService配置 | [config/mmc-local.conf](config/mmc-local.conf) | 两机相同：`device_sdma`、每worker `20GB`、`world_size=256` |
+| vLLM接入MemCache | [connector_config.py](connector_config.py) | `AscendStoreConnector`的`backend=memcache`，与P→D的`MooncakeConnectorV2`组成`MultiConnector` |
+| 配置与库路径加载 | [deploy.py](deploy.py)、[container-env.sh](container-env.sh) | 挂载本目录，设置`MMC_META_CONFIG_PATH`/`MMC_LOCAL_CONFIG_PATH`并加入MemCache库路径 |
+
+启动顺序如下；以下命令供服务器上执行，当前没有远端执行记录：
+
+```bash
+# 21：先启动MemCache Meta
+cd /var/ai-model/lzd/glm53flash-1p1d-21-22
+bash start_meta.sh
+docker logs --tail 100 glm53flash-21-22-meta-21
+
+# 22：启动D，16个worker各初始化20GB MemCache LocalService
+cd /var/ai-model/lzd/glm53flash-1p1d-21-22
+bash start_node.sh --node 22
+
+# 21：D就绪后启动P，16个worker各初始化20GB MemCache LocalService
+cd /var/ai-model/lzd/glm53flash-1p1d-21-22
+bash start_node.sh --node 21
+
+# 21：P/D全部就绪后启动代理
+bash start_proxy.sh
+```
+
+`start_meta.sh`最终在容器里执行的MemCache原生入口是：
+
+```python
+import sys
+from memcache_hybrid import MetaService
+sys.exit(MetaService.main())
+```
+
+**这里“Meta在21”不代表“全部DDR只在21”。** 当前按用户指定的官方第5.4节，每机16个worker各贡献20GB，两机各320GB、合计640GB。D端仍初始化LocalService并贡献DDR，但其Store直接加载/保存开关为false；P→D传输由Mooncake连接器负责。
+
+包使用所指定镜像里的`memcache_hybrid`和`memfabric_hybrid`，启动时检查实际包；没有源码编译安装步骤，也不会缺包后自动安装或改协议。镜像内容及Host DRAM可达性仍需现场验证。已经下载的社区源码位于本工作区的`community-sources/memcache-98fb4c303cae/`与`community-sources/memfabric-8df6c8f3e1ca/`，不在此部署目录内。
+
+MemCache日志位于每次启动的`runs/<时间>-<服务>-<节点>/memcache/`，模型worker输出在`dpN/stdout.log`，Ascend日志在`dpN/plog/`。采集入口为：
+
+```bash
+bash collect_logs.sh --node 21 --service meta
+bash collect_logs.sh --node 21 --service model
+bash collect_logs.sh --node 22 --service model
+```
+
 ## 文档与镜像的版本边界
 
 用户链接的latest与rc2 tag模型文档已有实质差异。最终只采用latest A3的DP2TP8/DP4TP4、1M、动态C8、MTP3与每worker20GB池配置。固定rc2镜像保持不变，**不能因此保证其实际二进制支持latest全部行为**。运行时记录实际vLLM、vLLM-Ascend、MemCache、MemFabric、Mooncake版本与barrier源码线索，最终由真实CLI、模型加载、图捕获、HAL和业务验证。缺包/参数不兼容即失败留证，不自动安装或改镜像。
