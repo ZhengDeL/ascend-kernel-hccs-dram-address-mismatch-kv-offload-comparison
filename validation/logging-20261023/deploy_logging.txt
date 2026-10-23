@@ -1,0 +1,23 @@
+Created glm53flash-21-22-meta-21. Startup is asynchronous; container running is not model/cache acceptance.
+Logs: C:\Users\00050057\AppData\Local\Temp\3\tmpk3peptxu
+test_collect_complete_bundle_returns_zero_and_service_override_is_preserved (test_deploy_logging.DeployLoggingTests.test_collect_complete_bundle_returns_zero_and_service_override_is_preserved) ... ok
+test_collect_defaults_all_and_returns_two_for_partial_bundle (test_deploy_logging.DeployLoggingTests.test_collect_defaults_all_and_returns_two_for_partial_bundle) ... ok
+test_created_container_has_persistent_log_mounts_before_observer_and_state_check (test_deploy_logging.DeployLoggingTests.test_created_container_has_persistent_log_mounts_before_observer_and_state_check) ... ok
+test_existing_container_is_refused_without_stop_remove_or_restart (test_deploy_logging.DeployLoggingTests.test_existing_container_is_refused_without_stop_remove_or_restart) ... ok
+test_failure_capture_error_does_not_replace_original_start_error (test_deploy_logging.DeployLoggingTests.test_failure_capture_error_does_not_replace_original_start_error) ... Failure capture could not complete: fixture capture failed
+Startup evidence: C:\Users\00050057\AppData\Local\Temp\3\tmpqqshdw0i\runs\20261023T141824Z-53296000-meta-21
+ok
+test_observer_is_detached_and_receives_original_start_window_and_cid (test_deploy_logging.DeployLoggingTests.test_observer_is_detached_and_receives_original_start_window_and_cid) ... ok
+test_observer_metadata_write_failure_does_not_fail_running_business (test_deploy_logging.DeployLoggingTests.test_observer_metadata_write_failure_does_not_fail_running_business) ... OS observer metadata could not be saved: fixture launch metadata disk failure
+OS logging coverage pending/partial; inspect C:\Users\00050057\AppData\Local\Temp\3\tmp5ulogixe\os-observer-launch.json
+ok
+test_observer_process_start_failure_is_nonfatal_and_persisted (test_deploy_logging.DeployLoggingTests.test_observer_process_start_failure_is_nonfatal_and_persisted) ... OS logging coverage pending/partial; inspect C:\Users\00050057\AppData\Local\Temp\3\tmpydcm5s5t\os-observer-launch.json
+ok
+test_preflight_failure_has_local_plan_before_and_failure_evidence (test_deploy_logging.DeployLoggingTests.test_preflight_failure_has_local_plan_before_and_failure_evidence) ... Startup evidence: C:\Users\00050057\AppData\Local\Temp\3\tmp6awoth45\logs\runs\20261023T141824Z-87644300-meta-21
+ok
+test_service_all_cannot_start_services (test_deploy_logging.DeployLoggingTests.test_service_all_cannot_start_services) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.078s
+
+OK

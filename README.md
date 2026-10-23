@@ -28,6 +28,9 @@
 5. [性能与正确性验收](docs/04-performance-gates.md)：5% 门槛、冷/热缓存对照、实际业务验收。
 6. [本地脚本与原配置审计](docs/05-local-input.md)：最终两机方案及不能继续沿用的旧模型参数。
 7. [只读采集工具](tools/README.md)：不修改服务；原始采集结果只留本地。
+8. [全链路日志源码核查](deployment/logging-source-audit.md)：OS持续采集、MemCache Local/Meta、vLLM、CANN/HCCL、MemFabric和Mooncake的真实开关与边界；操作入口见部署README日志表。
+
+部署包当前默认启用诊断日志。每个服务从启动preflight开始留证，并跟随容器持续采集OS日志；两机各执行`bash collect_logs.sh --node 21`或`--node 22`，会将运行日志、系统证据、metrics与容器状态打包并生成SHA256。缺失/权限不足/超时/截断会显示partial；详细DEBUG/TRACE日志的现场开销仍须按5%门槛另验收。
 
 原仓的全部文本文件已按固定提交下载并保留在 [upstream/ai_infra_summary](upstream/ai_infra_summary/README.md)。[来源清单](SOURCE_MANIFEST.json) 记录版本和文件哈希。新增研究在 `docs/`，不会改写原文来掩盖来源或历史结论。
 

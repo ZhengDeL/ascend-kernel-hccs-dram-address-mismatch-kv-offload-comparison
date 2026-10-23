@@ -1,0 +1,18 @@
+{
+  "scope": "Windows offline validation; no Docker/Linux/NPU service or network calls",
+  "python": "3.12.7 (tags/v3.12.7:0b05ead, Oct  1 2024, 03:06:41) [MSC v.1941 64 bit (AMD64)]",
+  "checks": {
+    "python_compile_files": 13,
+    "shell_syntax_files": 8,
+    "offline_plans": 4,
+    "offline_shell_entrypoints": 6,
+    "role_argv_stubs": 2,
+    "logging_config_parse": "PASS"
+  },
+  "test_suites": {
+    "host_logging": "----------------------------------------------------------------------\nRan 18 tests in 0.808s\n\nOK",
+    "diagnostics": "----------------------------------------------------------------------\nRan 18 tests in 1.081s\n\nOK",
+    "logging_runtime": "----------------------------------------------------------------------\nRan 13 tests in 2.367s\n\nOK (skipped=5)",
+    "deploy_logging": "----------------------------------------------------------------------\nRan 10 tests in 0.078s\n\nOK"
+  }
+}

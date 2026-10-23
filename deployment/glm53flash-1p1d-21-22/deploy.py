@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Fixed two-node GLM-5.3-Flash A3 recipe. Standard library; never SSH/pull/remove."""
 import argparse
+import datetime
 import hashlib
 import json
 import os
@@ -11,6 +12,7 @@ import socket
 import subprocess
 import sys
 import time
+import traceback
 import urllib.request
 
 ROOT = Path(__file__).resolve().parent
@@ -20,6 +22,13 @@ LOGROOT = Path("/var/ai-model/lzd/glm53flash-1p1d-21-22")
 IPS = {21: "192.0.2.21", 22: "192.0.2.22"}
 PROXY = "/vllm-workspace/vllm-ascend/examples/disaggregated_prefill_v1/load_balance_proxy_server_example.py"
 COMMIT = "4e6eac4e476d9be3476e99440f4cabed67b253ea"
+LOGGING_ENV = {
+    "PYTHONUNBUFFERED": "1", "PYTHONFAULTHANDLER": "1", "VLLM_CONFIGURE_LOGGING": "1",
+    "VLLM_LOGGING_LEVEL": "DEBUG", "VLLM_LOGGING_COLOR": "0", "VLLM_LOGGING_STREAM": "ext://sys.stdout",
+    "VLLM_LOGGING_CONFIG_PATH": "/opt/glm53flash/config/vllm-logging.json", "VLLM_LOG_STATS_INTERVAL": "10",
+    "ASCEND_GLOBAL_LOG_LEVEL": "0", "ASCEND_SLOG_PRINT_TO_STDOUT": "0", "HCCL_ENTRY_LOG_ENABLE": "1",
+    "MF_LOG_LEVEL": "0", "ASCEND_MF_LOG_LEVEL": "0", "MC_LOG_LEVEL": "TRACE",
+    "MC_LOG_DIR": "/run/glm53flash/mooncake"}
 PORTS = {"meta": [5000, 6000, 8000],
          "model21": [12325, 9081, 9082] + list(range(36680, 36698)),
          "model22": [12325] + list(range(9900, 9904)) + list(range(36580, 36600)), "proxy": [8081]}
@@ -47,7 +56,7 @@ def description(service, node, nic):
         command = ["python3", PROXY, "--host", "0.0.0.0", "--port", "8081",
                    "--prefiller-hosts", IPS[21], IPS[21], "--prefiller-ports", "9081", "9082",
                    "--decoder-hosts"] + [IPS[22]] * 4 + ["--decoder-ports"] + [str(p) for p in range(9900, 9904)]
-    result = {"node": node, "ip": IPS[node], "service": service, "role": role,
+    result = {"deployment": "glm53flash-1p1d-21-22", "node": node, "ip": IPS[node], "service": service, "role": role,
               "container": name, "image": IMAGE, "model": MODEL, "log_root": LOGROOT.as_posix(),
               "nic": nic or "AUTO_BY_LOCAL_IP", "command": command,
               "ports": PORTS.get("model" + str(node), []) if service == "model" else PORTS[service],
@@ -56,6 +65,14 @@ def description(service, node, nic):
               "vllm_ascend_reference_commit": COMMIT,
               "topology": {"P": {"nodes": [21], "dp": 2, "tp": 8, "pp": 1},
                            "D": {"nodes": [22], "dp": 4, "tp": 4, "pp": 1}}}
+    result["logging"] = {
+        "mode": "diagnostic", "vllm": "DEBUG", "memcache": "debug", "memfabric": "debug",
+        "mooncake": "TRACE", "cann": "DEBUG file plog", "hccl_entry_log": True,
+        "host_observer": "current boot snapshots + continuous journal/events; 30s memory, 60s NPU",
+        "stdout_rotation": "20MiB + 5 backups; separate first-error 128KiB",
+        "host_rotation": "10MiB + 5 backups; separate first 2MiB per stream",
+        "native_rotation": "component-specific; vLLM-Ascend has no verified total retention limit",
+        "performance_acceptance": "pending <=5% A/B under identical logging conditions"}
     if service == "model":
         from connector_config import connector
         result["connectors"] = [connector(role, rank) for rank in range(2 if node == 21 else 4)]
@@ -119,28 +136,82 @@ def check_ports(ports):
 def capture(out, container=None):
     """Bounded read-only snapshots; collector failure cannot replace service error."""
     out.mkdir(parents=True, exist_ok=True)
-    for name, cmd in [("kernel-tail", ["journalctl", "-k", "-n", "500", "--no-pager"]),
+    sys.path.insert(0, str(ROOT / "tools"))
+    from collect_server import execute
+    commands = [("kernel-tail", ["journalctl", "-k", "-n", "500", "--no-pager"]),
                       ("npu-smi", ["npu-smi", "info"]), ("memory", ["free", "-m"]),
-                      ("sockets", ["ss", "-lnt"])]:
-        try:
-            result = run(cmd, check=False, timeout=15)
-            (out / (name + ".txt")).write_text("exit={}\n{}\n{}".format(
-                result.returncode, result.stdout[-120000:], result.stderr[-8000:]), encoding="utf-8")
-        except Exception as exc:
-            (out / (name + ".txt")).write_text(str(exc), encoding="utf-8")
+                      ("sockets", ["ss", "-lnt"])]
     if container:
-        for label, cmd in [("state", ["docker", "inspect", "--format", "{{json .State}}", container]),
-                           ("stdout", ["docker", "logs", "--tail", "1000", container])]:
-            try:
-                result = run(cmd, check=False, timeout=15)
-                (out / (label + ".txt")).write_text(result.stdout[-200000:] + result.stderr[-12000:], encoding="utf-8")
-            except Exception as exc:
-                (out / (label + ".txt")).write_text(str(exc), encoding="utf-8")
+        commands.extend([("state", ["docker", "inspect", "--format", "{{json .State}}", container]),
+                         ("stdout", ["docker", "logs", "--tail", "1000", container])])
+    status = []
+    for name, cmd in commands:
+        try:
+            info, stdout, stderr = execute(cmd, 15, limit=256 * 1024)
+            (out / (name + ".stdout.txt")).write_bytes(stdout)
+            (out / (name + ".stderr.txt")).write_bytes(stderr)
+            status.append(dict(name=name, **info))
+        except Exception as exc:
+            status.append({"name": name, "status": "capture_failed", "error": str(exc)})
+    (out / "capture-status.json").write_text(json.dumps(status, indent=2), encoding="utf-8")
 
 
 def start(plan):
     if platform.system() != "Linux":
         raise RuntimeError("Real start requires Linux; use plan / --dry-run on this host")
+    plan["started_utc"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + str(time.time_ns())[-8:]
+    run_dir = LOGROOT / "runs" / (stamp + "-" + plan["service"] + "-" + str(plan["node"]))
+    run_dir.mkdir(parents=True, mode=0o700)
+    os.chmod(run_dir, 0o700)
+    (run_dir / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8")
+    try:
+        capture(run_dir / "before")
+        return start_checked(plan, run_dir)
+    except Exception:
+        # Even preflight failures get their own evidence directory. Never replace
+        # the original error with a diagnostic error, or touch an existing container.
+        try:
+            (run_dir / "start-error.txt").write_text(traceback.format_exc(), encoding="utf-8")
+            owned = (run_dir / "container-id.txt").read_text().strip() if (run_dir / "container-id.txt").exists() else None
+            capture(run_dir / "failure", owned)
+        except Exception as capture_error:
+            print("Failure capture could not complete: " + str(capture_error), file=sys.stderr)
+        print("Startup evidence: " + str(run_dir), file=sys.stderr)
+        raise
+
+
+def launch_observer(plan, run_dir, cid):
+    """Detached read-only observer. Its own failure must not stop the business."""
+    info = {"container": cid, "started_utc": plan["started_utc"], "status": "launch_pending"}
+    try:
+        with (run_dir / "os-observer-launch.log").open("ab", buffering=0) as log:
+            observer = subprocess.Popen([
+                sys.executable, str(ROOT / "host_logging.py"), "--container", cid,
+                "--output", str(run_dir / "os"), "--service", plan["service"],
+                "--since-utc", plan["started_utc"]], stdin=subprocess.DEVNULL,
+                stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+        info["pid"] = observer.pid
+        deadline = time.monotonic() + 2
+        while time.monotonic() < deadline and observer.poll() is None:
+            if (run_dir / "os/observer-registered.json").exists():
+                info["status"] = "registered; initialization coverage pending observer-ready.json"
+                break
+            time.sleep(0.1)
+        else:
+            info["status"] = "registration_pending" if observer.poll() is None else "launch_failed"
+            info["returncode"] = observer.poll()
+    except Exception as error:
+        info.update(status="launch_failed", error=str(error))
+    try:
+        (run_dir / "os-observer-launch.json").write_text(json.dumps(info, indent=2), encoding="utf-8")
+    except OSError as error:
+        print("OS observer metadata could not be saved: " + str(error), file=sys.stderr)
+    if "failed" in info["status"] or info["status"] == "registration_pending":
+        print("OS logging coverage pending/partial; inspect " + str(run_dir / "os-observer-launch.json"), file=sys.stderr)
+
+
+def start_checked(plan, run_dir):
     for exe in ("docker", "ip", "npu-smi"):
         if not shutil.which(exe):
             raise RuntimeError("Missing host dependency: " + exe)
@@ -218,23 +289,24 @@ def start(plan):
                 with opener.open("http://{}:{}/health".format(host, port), timeout=5) as response:
                     if response.status != 200:
                         raise RuntimeError("Model endpoint not ready: {}:{}".format(host, port))
-    stamp = time.strftime("%Y%m%d-%H%M%S") + "-" + str(time.time_ns())[-6:]
-    run_dir = LOGROOT / "runs" / (stamp + "-" + plan["service"] + "-" + str(plan["node"]))
-    run_dir.mkdir(parents=True, mode=0o700)
     (run_dir / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8")
-    capture(run_dir / "before")
+    for folder in ("plog", "native-ascend", "native-memfabric"):
+        (run_dir / folder).mkdir(mode=0o700)
     env = {"LOCAL_IP": plan["ip"], "NIC_NAME": plan["nic"], "MODEL_PATH": MODEL,
            "PYTHONUNBUFFERED": "1", "PYTHONHASHSEED": "0", "ACL_OP_INIT_MODE": "1",
            "ASCEND_ENABLE_USE_FABRIC_MEM": "1", "ASCEND_RT_VISIBLE_DEVICES": ",".join(map(str, range(16))),
            "MMC_META_CONFIG_PATH": "/opt/glm53flash/config/mmc-meta.conf",
            "MMC_LOCAL_CONFIG_PATH": "/opt/glm53flash/config/mmc-local.conf",
            "ASCEND_PROCESS_LOG_PATH": "/run/glm53flash/plog"}
+    env.update(LOGGING_ENV)
     argv = ["docker", "run", "--pull", "never", "--detach", "--name", plan["container"], "--network", "host",
             "--shm-size", "100g", "--ulimit", "memlock=-1:-1", "--cap-add", "IPC_LOCK",
             "--label", "deployment=glm53flash-1p1d-21-22", "--label", "service=" + plan["service"],
             "--log-opt", "max-size=50m", "--log-opt", "max-file=5",
             "--volume", str(ROOT) + ":/opt/glm53flash:ro",
             "--volume", str(run_dir) + ":/run/glm53flash",
+            "--volume", str(run_dir / "native-ascend") + ":/root/ascend/log",
+            "--volume", str(run_dir / "native-memfabric") + ":/var/log/memfabric_hybrid",
             "--volume", "/usr/local/Ascend/driver:/usr/local/Ascend/driver:ro",
             "--volume", "/etc/ascend_install.info:/etc/ascend_install.info:ro",
             "--volume", "/etc/hccn.conf:/etc/hccn.conf:ro"]
@@ -248,21 +320,18 @@ def start(plan):
     for key, value in env.items():
         argv += ["--env", key + "=" + value]
     # PID 1 supervises the real process and preserves its exit code/logs. No idle shell.
-    argv += ["--entrypoint", "/bin/bash", IMAGE, "/opt/glm53flash/container-env.sh",
-             "python3", "/opt/glm53flash/runtime.py", plan["service"], "--"] + plan["command"]
-    try:
-        result = run(argv, timeout=60)
-        (run_dir / "container-id.txt").write_text(result.stdout.strip() + "\n", encoding="utf-8")
-        time.sleep(2)
-        state = json.loads(run(["docker", "inspect", "--format", "{{json .State}}", plan["container"]]).stdout)
-        if not state["Running"]:
-            raise RuntimeError("Container exited with code {}; inspect {}".format(state["ExitCode"], run_dir))
-    except Exception:
-        try:
-            capture(run_dir / "failure", plan["container"])
-        except Exception as capture_error:
-            print("Failure capture could not complete: " + str(capture_error), file=sys.stderr)
-        raise
+    # Capture before CANN environment initialization and package-path discovery,
+    # so shell/import failures also reach stdout.log and first-error.log.
+    argv += ["--entrypoint", "python3", IMAGE, "/opt/glm53flash/runtime.py", plan["service"], "--",
+             "/bin/bash", "/opt/glm53flash/container-env.sh"] + plan["command"]
+    result = run(argv, timeout=60)
+    cid = result.stdout.strip()
+    (run_dir / "container-id.txt").write_text(cid + "\n", encoding="utf-8")
+    launch_observer(plan, run_dir, cid)
+    time.sleep(2)
+    state = json.loads(run(["docker", "inspect", "--format", "{{json .State}}", cid]).stdout)
+    if not state["Running"]:
+        raise RuntimeError("Container exited with code {}; inspect {}".format(state["ExitCode"], run_dir))
     print("Created {}. Startup is asynchronous; container running is not model/cache acceptance.\nLogs: {}".format(
         plan["container"], run_dir))
 
@@ -270,42 +339,41 @@ def start(plan):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=["plan", "start", "collect"])
-    parser.add_argument("--service", choices=["meta", "model", "proxy"], default="model")
+    parser.add_argument("--service", choices=["all", "meta", "model", "proxy"])
     parser.add_argument("--node", type=int, choices=[21, 22], required=True)
     parser.add_argument("--nic")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
-    if args.service != "model" and args.node != 21:
+    args.service = args.service or ("all" if args.action == "collect" else "model")
+    if args.service == "all" and args.action != "collect":
+        parser.error("--service all only applies to collect")
+    if args.service not in ("model", "all") and args.node != 21:
         parser.error("Meta and proxy are fixed on node 21")
+    if args.action == "collect":
+        if args.dry_run:
+            print(json.dumps({"action": "collect", "node": args.node, "service": args.service,
+                              "log_root": str(LOGROOT), "read_only": True,
+                              "output": "manual-evidence/<UTC>-<node>.tar.gz + .sha256",
+                              "live_collection_executed": False}, indent=2))
+            return 0
+        if platform.system() != "Linux":
+            raise RuntimeError("Read-only live collection requires Linux")
+        local_nic(args.node, args.nic)
+        from diagnostics import collect
+        archive, partial = collect(args.node, args.service)
+        print(str(archive) + (" (partial; review collection-report.json)" if partial else ""))
+        return 2 if partial else 0
     plan = description(args.service, args.node, args.nic)
     if args.action == "plan" or args.dry_run:
         print(json.dumps(plan, ensure_ascii=False, indent=2))
-    elif args.action == "collect":
-        if platform.system() != "Linux":
-            raise RuntimeError("Read-only live collection requires Linux")
-        output = LOGROOT / "manual-evidence" / (time.strftime("%Y%m%d-%H%M%S") + "-" + str(args.node))
-        capture(output, plan["container"])
-        collector = ROOT / "tools" / "collect_server.py"
-        if collector.exists():
-            try:
-                result = run([sys.executable, str(collector), "--output", str(output / "full"),
-                              "--container", plan["container"]], check=False, timeout=900)
-            except subprocess.TimeoutExpired:
-                (output / "collector-status.txt").write_text(
-                    "timeout=900s\npartial=true\nReview preserved files and manifest before using this evidence.\n", encoding="utf-8")
-                raise RuntimeError("Collector timed out; partial evidence preserved at " + str(output))
-            (output / "collector-status.txt").write_text("exit={}\n{}\n{}".format(
-                result.returncode, result.stdout[-20000:], result.stderr[-8000:]), encoding="utf-8")
-            if result.returncode:
-                raise RuntimeError("Collector failed; partial evidence preserved at " + str(output))
-        print(output)
     else:
         start(plan)
+    return 0
 
 
 if __name__ == "__main__":
     try:
-        main()
+        sys.exit(main())
     except (RuntimeError, OSError, ValueError, subprocess.TimeoutExpired) as exc:
         print("ERROR: " + str(exc), file=sys.stderr)
         sys.exit(1)

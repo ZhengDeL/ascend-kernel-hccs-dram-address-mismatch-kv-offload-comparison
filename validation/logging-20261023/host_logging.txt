@@ -1,0 +1,23 @@
+test_container_exit_finishes_observer_and_keeps_business_state (test_host_logging.HostLoggingTests.test_container_exit_finishes_observer_and_keeps_business_state) ... ok
+test_duplicate_observer_cannot_overwrite_lock (test_host_logging.HostLoggingTests.test_duplicate_observer_cannot_overwrite_lock) ... ok
+test_execute_drains_both_pipes_and_records_real_truncation (test_host_logging.HostLoggingTests.test_execute_drains_both_pipes_and_records_real_truncation) ... ok
+test_execute_missing_command_is_explicit_partial_evidence (test_host_logging.HostLoggingTests.test_execute_missing_command_is_explicit_partial_evidence) ... ok
+test_execute_timeout_terminates_only_owned_child (test_host_logging.HostLoggingTests.test_execute_timeout_terminates_only_owned_child) ... ok
+test_follow_flushes_sparse_lines_before_exit_and_stops_child (test_host_logging.HostLoggingTests.test_follow_flushes_sparse_lines_before_exit_and_stops_child) ... ok
+test_follow_logging_failure_terminates_its_already_started_child (test_host_logging.HostLoggingTests.test_follow_logging_failure_terminates_its_already_started_child) ... ok
+test_inspect_does_not_dump_env_or_command (test_host_logging.HostLoggingTests.test_inspect_does_not_dump_env_or_command) ... ok
+test_kernel_missing_journal_falls_back_and_marks_partial (test_host_logging.HostLoggingTests.test_kernel_missing_journal_falls_back_and_marks_partial) ... ok
+test_non_linux_run_is_explicitly_unavailable (test_host_logging.HostLoggingTests.test_non_linux_run_is_explicitly_unavailable) ... ok
+test_once_registers_identity_saves_final_state_and_releases_lock (test_host_logging.HostLoggingTests.test_once_registers_identity_saves_final_state_and_releases_lock) ... ok
+test_pid_birth_handles_spaces_and_parentheses_in_comm (test_host_logging.HostLoggingTests.test_pid_birth_handles_spaces_and_parentheses_in_comm) ... ok
+test_reject_short_cid_before_running_docker (test_host_logging.HostLoggingTests.test_reject_short_cid_before_running_docker) ... ok
+test_rotation_keeps_bounded_recent_window_and_first_error (test_host_logging.HostLoggingTests.test_rotation_keeps_bounded_recent_window_and_first_error) ... ok
+test_since_utc_requires_timezone (test_host_logging.HostLoggingTests.test_since_utc_requires_timezone) ... ok
+test_stale_lock_is_reported_without_unlink_race (test_host_logging.HostLoggingTests.test_stale_lock_is_reported_without_unlink_race) ... ok
+test_system_and_kernel_follow_include_original_start_time (test_host_logging.HostLoggingTests.test_system_and_kernel_follow_include_original_start_time) ... ok
+test_wrong_labels_refuse_observation (test_host_logging.HostLoggingTests.test_wrong_labels_refuse_observation) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.808s
+
+OK

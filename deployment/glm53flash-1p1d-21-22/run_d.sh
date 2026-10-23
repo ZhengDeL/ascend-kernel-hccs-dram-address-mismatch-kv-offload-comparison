@@ -14,6 +14,7 @@ export HCCL_OP_EXPANSION_MODE=AIV
 export HCCL_BUFFSIZE=1024
 export ASCEND_RT_VISIBLE_DEVICES="$1"
 kv_config="$(python3 /opt/glm53flash/connector_config.py D "$4")"
+additional_config="$(python3 -c 'import json,os; from pathlib import Path; c=json.loads("{\"multistream_overlap_shared_expert\":true,\"recompute_scheduler_enable\":true,\"enable_shared_expert_dp\":true,\"enable_flashcomm1\":true}"); c["ascend_log_path"]=str(Path(os.environ["ASCEND_PROCESS_LOG_PATH"]).parent/"vllm_ascend"); print(json.dumps(c))')"
 exec vllm serve "$MODEL_PATH" \
   --host 0.0.0.0 \
   --port "$2" \
@@ -39,7 +40,7 @@ exec vllm serve "$MODEL_PATH" \
   --kv-cache-dtype int8 \
   --compilation-config '{"cudagraph_mode": "FULL_DECODE_ONLY"}' \
   --speculative-config '{"num_speculative_tokens": 3, "method": "deepseek_mtp", "enforce_eager": false}' \
-  --additional-config '{"multistream_overlap_shared_expert":true,"recompute_scheduler_enable":true,"enable_shared_expert_dp":true,"enable_flashcomm1":true}' \
+  --additional-config "$additional_config" \
   --enable-prefix-caching \
   --enable-chunked-prefill \
   --kv-transfer-config "$kv_config"

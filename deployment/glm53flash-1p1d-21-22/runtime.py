@@ -1,94 +1,113 @@
 #!/usr/bin/env python3
-"""Container PID 1: bounded diagnostics, dependency gates, stdout tee, exact exit code."""
-import importlib
+"""Container PID 1: capture preflight/native output, supervise and preserve status."""
 import importlib.metadata
-import json
 import os
 from pathlib import Path
 import signal
 import subprocess
 import sys
 import time
+import traceback
+
+from logging_utils import CaptureOwnOutput, exit_code, write_json, write_metadata
 
 OUT = Path("/run/glm53flash")
 
 
-def snapshot(name):
+def snapshot(name, out=OUT):
     for label, command in [("npu", ["npu-smi", "info"]), ("memory", ["free", "-m"])]:
         try:
             res = subprocess.run(command, capture_output=True, text=True, timeout=15)
-            (OUT / (name + "-" + label + ".txt")).write_text(
+            (out / (name + "-" + label + ".txt")).write_text(
                 "exit={}\n{}\n{}".format(res.returncode, res.stdout[-100000:], res.stderr[-8000:]), encoding="utf-8")
         except Exception as exc:
             try:
-                (OUT / (name + "-" + label + ".txt")).write_text(str(exc), encoding="utf-8")
+                (out / (name + "-" + label + ".txt")).write_text(str(exc), encoding="utf-8")
             except OSError:
                 print("Snapshot could not be saved: " + label, file=sys.stderr, flush=True)
 
 
-def main():
-    service = sys.argv[1]
-    command = sys.argv[3:]
-    (OUT / "plog").mkdir(parents=True, exist_ok=True)
-    (OUT / "memcache").mkdir(parents=True, exist_ok=True)
-    versions = {}
-    for package in ("vllm", "vllm-ascend", "memcache-hybrid", "memfabric-hybrid", "mooncake-transfer-engine"):
-        try:
-            versions[package] = importlib.metadata.version(package)
-        except importlib.metadata.PackageNotFoundError:
-            versions[package] = "not-installed"
-    (OUT / "versions.json").write_text(json.dumps(versions, indent=2), encoding="utf-8")
-    snapshot("before")
-    code = 1
+def feature_source(out):
+    """Inspect distribution files without importing torch/vLLM and initializing NPU."""
+    source = None
     try:
-        for module in (("memcache_hybrid", "memfabric_hybrid") if service == "meta" else
-                       ("vllm", "vllm_ascend", "memcache_hybrid", "memfabric_hybrid", "mooncake") if service == "model" else
-                       ("aiohttp", "fastapi", "uvicorn")):
-            importlib.import_module(module)
-        # Official vLLM/MemCache entrypoints perform their own connector and HAL checks.
-        # Do not impose a different source tree's factory/scanner API on the installed image.
-        if service == "model":
-            from importlib.util import find_spec
-            spec = find_spec("vllm_ascend")
-            package = Path(spec.origin).parent
-            source = package / "distributed/kv_transfer/kv_pool/ascend_store/backend/memcache_backend.py"
-            (OUT / "feature-source.json").write_text(json.dumps({
-                "memcache_backend_source_present": source.is_file(),
-                "memcache_dp_init_barrier_text_present": source.is_file() and
-                    "memcache_dp_init_barrier" in source.read_text(encoding="utf-8", errors="replace"),
-                "document_reference_commit": "4e6eac4e476d9be3476e99440f4cabed67b253ea",
-                "image_tag": "v0.30.0rc2-a3",
-                "runtime_feature_acceptance": "pending actual vLLM initialization"
-            }, indent=2), encoding="utf-8")
-        if service == "proxy" and not Path(command[1]).is_file():
-            raise RuntimeError("Official proxy is absent in selected image")
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                   text=True, bufsize=1, start_new_session=True)
+        distribution = importlib.metadata.distribution("vllm-ascend")
+        source = Path(distribution.locate_file(
+            "vllm_ascend/distributed/kv_transfer/kv_pool/ascend_store/backend/memcache_backend.py"))
+    except importlib.metadata.PackageNotFoundError:
+        pass
+    present = source is not None and source.is_file()
+    write_json(out / "feature-source.json", {
+        "memcache_backend_source_present": present,
+        "memcache_dp_init_barrier_text_present": present and
+            "memcache_dp_init_barrier" in source.read_text(encoding="utf-8", errors="replace"),
+        "document_reference_commit": "4e6eac4e476d9be3476e99440f4cabed67b253ea",
+        "image_tag": "v0.30.0rc2-a3",
+        "runtime_feature_acceptance": "pending actual vLLM initialization",
+    })
+
+
+def main(argv=None, out=None):
+    argv = sys.argv[1:] if argv is None else argv
+    out = OUT if out is None else Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    # Set up before parsing arguments or importing/starting business packages.
+    with CaptureOwnOutput(out / "stdout.log") as capture:
+        code = 1
+        process = None
+        requested_signal = [None]
+
         def forward(signum, _frame):
-            if process.poll() is None:
-                os.killpg(process.pid, signum)
-        signal.signal(signal.SIGTERM, forward)
-        signal.signal(signal.SIGINT, forward)
-        with (OUT / "stdout.log").open("a", encoding="utf-8") as log:
-            for line in process.stdout:
-                print(line, end="", flush=True)
-                log.write(line)
-                log.flush()
-        code = process.wait()
-        if code < 0:
-            code = 128 - code
-    except Exception as exc:
-        print("Runtime preflight/launch failed: " + repr(exc), file=sys.stderr, flush=True)
+            requested_signal[0] = signum
+            if process is not None and process.poll() is None:
+                try:
+                    os.killpg(process.pid, signum)
+                except ProcessLookupError:
+                    pass
+
+        previous = {sig: signal.signal(sig, forward) for sig in (signal.SIGTERM, signal.SIGINT)}
         try:
-            (OUT / "runtime-error.txt").write_text(repr(exc), encoding="utf-8")
-        except OSError:
-            pass
-    finally:
-        try:
-            (OUT / "exit-status.json").write_text(json.dumps({"exit_code": code, "finished_at": time.time()}), encoding="utf-8")
-        except OSError as exc:
-            print("Could not save exit status; original code={}: {}".format(code, exc), file=sys.stderr, flush=True)
-        snapshot("after" if code == 0 else "failure")
+            if len(argv) < 3 or argv[1] != "--" or argv[0] not in ("model", "meta", "proxy"):
+                raise ValueError("Usage: runtime.py {model|meta|proxy} -- command [args...]")
+            service, command = argv[0], argv[2:]
+            for directory in ("plog", "memcache", "mooncake", "vllm_ascend"):
+                (out / directory).mkdir(parents=True, exist_ok=True)
+            write_metadata(out, service)
+            snapshot("before", out)
+            # Real entrypoints initialize dependencies once; failures and their
+            # full traceback are already captured by the fd-level tee.
+            if service == "model":
+                try:
+                    feature_source(out)
+                except Exception as exc:
+                    print("Feature source diagnostics unavailable: " + str(exc), file=sys.stderr, flush=True)
+            if service == "proxy" and (len(command) < 2 or not Path(command[1]).is_file()):
+                raise RuntimeError("Official proxy is absent in selected image")
+            if requested_signal[0] is not None:
+                code = 128 + requested_signal[0]
+            else:
+                process = subprocess.Popen(command, start_new_session=True)
+                if requested_signal[0] is not None:
+                    forward(requested_signal[0], None)
+                code = exit_code(process.wait())
+        except Exception:
+            print("Runtime preflight/launch failed:", file=sys.stderr, flush=True)
+            traceback.print_exc()
+            code = 1
+        finally:
+            try:
+                write_json(out / "exit-status.json", {
+                    "exit_code": code, "child_returncode": process.returncode if process is not None else None,
+                    "received_signal": requested_signal[0], "finished_at": time.time(),
+                    "logging_errors": capture.tee.log.errors,
+                    "docker_mirror_bytes_dropped": capture.tee.mirror_bytes_dropped,
+                    "capture_counts_scope": "Counts at child exit; final drainage may add output.",
+                })
+            except Exception as exc:
+                print("Could not save exit status; original code={}: {}".format(code, exc), file=sys.stderr, flush=True)
+            snapshot("after" if code == 0 else "failure", out)
+            for sig, handler in previous.items():
+                signal.signal(sig, handler)
     return code
 
 

@@ -1,0 +1,18 @@
+test_blocked_docker_mirror_does_not_block_primary_capture_or_child (test_logging_runtime.BoundedLoggingTests.test_blocked_docker_mirror_does_not_block_primary_capture_or_child) ... ok
+test_both_streams_large_binary_output_and_nonzero_status (test_logging_runtime.BoundedLoggingTests.test_both_streams_large_binary_output_and_nonzero_status) ... ok
+test_broken_log_sink_continues_draining_and_preserves_process_code (test_logging_runtime.BoundedLoggingTests.test_broken_log_sink_continues_draining_and_preserves_process_code) ... ok
+test_metadata_allowlist_omits_secrets_and_never_imports_accelerator (test_logging_runtime.BoundedLoggingTests.test_metadata_allowlist_omits_secrets_and_never_imports_accelerator) ... ok
+test_own_fd_and_preflight_traceback_are_captured (test_logging_runtime.BoundedLoggingTests.test_own_fd_and_preflight_traceback_are_captured) ... ok
+test_per_dp_config_preserves_all_nonlogging_fields (test_logging_runtime.BoundedLoggingTests.test_per_dp_config_preserves_all_nonlogging_fields) ... ok
+test_rotation_retains_first_traceback_and_bounds_long_lines (test_logging_runtime.BoundedLoggingTests.test_rotation_retains_first_traceback_and_bounds_long_lines) ... ok
+test_short_writes_are_retried_without_losing_bytes (test_logging_runtime.BoundedLoggingTests.test_short_writes_are_retried_without_losing_bytes) ... ok
+test_business_import_failure_is_captured_before_any_business_import_gate (test_logging_runtime.LinuxRuntimeTests.test_business_import_failure_is_captured_before_any_business_import_gate) ... skipped 'Requires Linux fd inheritance, bash and POSIX process groups; Windows unit tests do not certify Linux runtime.'
+test_dp_signal_kills_only_owned_child_groups (test_logging_runtime.LinuxRuntimeTests.test_dp_signal_kills_only_owned_child_groups) ... skipped 'Requires Linux fd inheritance, bash and POSIX process groups; Windows unit tests do not certify Linux runtime.'
+test_dp_unexpected_zero_is_failure_and_config_used_is_rank_local (test_logging_runtime.LinuxRuntimeTests.test_dp_unexpected_zero_is_failure_and_config_used_is_rank_local) ... skipped 'Requires Linux fd inheritance, bash and POSIX process groups; Windows unit tests do not certify Linux runtime.'
+test_exact_child_exit_and_failed_status_write_does_not_replace_it (test_logging_runtime.LinuxRuntimeTests.test_exact_child_exit_and_failed_status_write_does_not_replace_it) ... skipped 'Requires Linux fd inheritance, bash and POSIX process groups; Windows unit tests do not certify Linux runtime.'
+test_runtime_forwards_sigterm_and_captures_final_output (test_logging_runtime.LinuxRuntimeTests.test_runtime_forwards_sigterm_and_captures_final_output) ... skipped 'Requires Linux fd inheritance, bash and POSIX process groups; Windows unit tests do not certify Linux runtime.'
+
+----------------------------------------------------------------------
+Ran 13 tests in 2.367s
+
+OK (skipped=5)

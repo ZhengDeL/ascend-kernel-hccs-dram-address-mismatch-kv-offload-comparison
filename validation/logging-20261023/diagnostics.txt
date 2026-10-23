@@ -1,0 +1,23 @@
+test_copy_budget_and_file_cap_mark_partial_with_real_snapshot_hashes (test_diagnostics.BundleTests.test_copy_budget_and_file_cap_mark_partial_with_real_snapshot_hashes) ... ok
+test_failed_command_is_reported_as_partial (test_diagnostics.BundleTests.test_failed_command_is_reported_as_partial) ... ok
+test_finish_manifest_and_archive_verify_every_saved_byte (test_diagnostics.BundleTests.test_finish_manifest_and_archive_verify_every_saved_byte) ... ok
+test_incomplete_pipe_drain_is_reported_as_partial (test_diagnostics.BundleTests.test_incomplete_pipe_drain_is_reported_as_partial) ... ok
+test_initial_first_error_segment_wins_over_expendable_rolls (test_diagnostics.BundleTests.test_initial_first_error_segment_wins_over_expendable_rolls) ... ok
+test_invalid_budget_fails_before_creating_output (test_diagnostics.BundleTests.test_invalid_budget_fails_before_creating_output) ... ok
+test_symlink_file_and_directory_are_skipped_without_reading_outside (test_diagnostics.BundleTests.test_symlink_file_and_directory_are_skipped_without_reading_outside) ... ok
+test_truncated_command_is_reported_as_partial (test_diagnostics.BundleTests.test_truncated_command_is_reported_as_partial) ... ok
+test_historical_selection_excludes_other_node_service_and_deployment (test_diagnostics.CollectionSelectionTests.test_historical_selection_excludes_other_node_service_and_deployment) ... ok
+test_legacy_own_plan_is_eligible_but_wrong_container_is_not (test_diagnostics.CollectionSelectionTests.test_legacy_own_plan_is_eligible_but_wrong_container_is_not) ... ok
+test_malformed_historical_plan_does_not_abort_other_failed_run_recovery (test_diagnostics.CollectionSelectionTests.test_malformed_historical_plan_does_not_abort_other_failed_run_recovery) ... ok
+test_malformed_observer_json_marks_partial_without_aborting_archive (test_diagnostics.CollectionSelectionTests.test_malformed_observer_json_marks_partial_without_aborting_archive) ... ok
+test_mount_outside_runs_is_refused (test_diagnostics.CollectionSelectionTests.test_mount_outside_runs_is_refused) ... ok
+test_observer_partial_coverage_propagates_to_bundle_report (test_diagnostics.CollectionSelectionTests.test_observer_partial_coverage_propagates_to_bundle_report) ... ok
+test_removed_container_failed_run_is_still_recovered (test_diagnostics.CollectionSelectionTests.test_removed_container_failed_run_is_still_recovered) ... ok
+test_runs_root_and_nested_directory_are_not_mount_run_sources (test_diagnostics.CollectionSelectionTests.test_runs_root_and_nested_directory_are_not_mount_run_sources) ... ok
+test_stopped_container_logs_and_mounted_run_are_preserved (test_diagnostics.CollectionSelectionTests.test_stopped_container_logs_and_mounted_run_are_preserved) ... ok
+test_wrong_labels_prevent_docker_logs_and_mount_access (test_diagnostics.CollectionSelectionTests.test_wrong_labels_prevent_docker_logs_and_mount_access) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.081s
+
+OK
